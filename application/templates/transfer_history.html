@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Transfer History{% endblock %}
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Transfer History</h1>
+    <form method="POST" class="mb-4">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.from_account_id.label(class="form-label") }}
+            {{ form.from_account_id(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+    <table class="accounts-table">
+        <thead class="thead-dark">
+            <tr>
+                <th>UUID</th>
+                <th>From Account</th>
+                <th>To Account</th>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Date</th>
+
+            </tr>
+        </thead>
+        <h1>Incomes</h1>
+        <tbody>
+            {% for transfer in incomes %}
+            <tr>
+                <td>{{ transfer.uuid }}</td>
+                <td>{{ transfer.from_account_id }}</td>
+                <td>{{ transfer.to_account_id }}</td>
+                <td>{{ transfer.title }}</td>
+                <td>{{ transfer.amount }}</td>
+                <td>{{ transfer.timestamp }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table class="accounts-table">
+        <thead class="thead-dark">
+            <tr>
+                <th>UUID</th>
+                <th>From Account</th>
+                <th>To Account</th>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Date</th>
+
+            </tr>
+        </thead>
+        <h1>Outcomes</h1>
+        <tbody>
+            {% for transfer in outcomes %}
+            <tr>
+                <td>{{ transfer.uuid }}</td>
+                <td>{{ transfer.from_account_id }}</td>
+                <td>{{ transfer.to_account_id }}</td>
+                <td>{{ transfer.title }}</td>
+                <td>{{ transfer.amount }}</td>
+                <td>{{ transfer.timestamp }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

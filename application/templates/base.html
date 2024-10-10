@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}bank{% endblock %}</title>
+    {% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% endblock %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+</head>
+<body>
+    {% block navbar %}
+    <nav class="navbar">
+        <div class="container">
+            {% if current_user.is_authenticated %}
+                <span class="logged-in-info">You are logged in as {{ current_user.name }} {{ current_user.surname }}</span>
+                <a class="nav-link" href="{{ url_for('account.show_user_accounts') }}">My Accounts</a>
+                <a class="nav-link" href="{{ url_for('account.add_bank_account') }}">Add Bank Account</a>
+                <a class="nav-link" href="{{ url_for('transfer.transfercash') }}">Make Transfer</a>
+                <a class="nav-link" href="{{ url_for('transaction.transaction_history') }}" class="btn btn-success">Transactions History</a>
+                <a class="nav-link" href="{{ url_for('transfer.transferhistory') }}" class="btn btn-success">Transfer History</a>
+                <a class="nav-link" href="{{ url_for('transaction.atmdeposit') }}">Deposit</a>
+                <a class="nav-link" href="{{ url_for('transaction.simple_withdraw') }}">Withdraw</a>
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Log out</a>
+            
+            {% else %}
+                <a class="nav-link" href="{{ url_for('auth.login') }}">Log in</a>
+                <a class="nav-link" href="{{ url_for('auth.register') }}">Create an account</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endblock %}
+    {% block content3 %}
+    <div class="container">
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}
+</body>
+</html>

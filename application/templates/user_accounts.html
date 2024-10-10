@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}All Accounts{% endblock %}
+
+{% block content %}
+    <div class="accounts-container">
+        <h2>All Accounts</h2>
+        {% if accounts %}
+            <table class="accounts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Balance [PLN]</th>
+                        <th>Bank ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                        <tr>
+                            <td>{{ account.id }}</td>
+                            <td>{{ account.name }}</td>
+                            <td>{{ account.description }}</td>
+                            <td>{{ account.balance }}</td>
+                            <td>{{ account.bank_id }}</td>
+                            <td>
+                                <a href="{{ url_for('account.edit_account', id_to_edit=account.id) }}" >Edit Account</a>
+                                
+                                <!-- <a href="{{ url_for('transaction.simple_withdraw') }}" class="btn btn-success">Withdraw</a> -->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No accounts found.</p>
+        {% endif %}
+    </div>
+{% endblock %}

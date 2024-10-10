@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Deposit</title>
+</head>
+<body>
+    <h1>Simple Deposit</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.amount.label }}
+            {{ form.amount(class="form-control") }}
+        </div>
+        <div>
+            {{ form.submit(class="form-control") }}
+        </div>
+    </form>
+</body>
+</html>
