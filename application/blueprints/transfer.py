@@ -28,38 +28,43 @@ def transfercash():
         return render_template('transfer.html', form=form)
 
         
-        if from_account.bank_id == to_account.bank_id:
-            # Immediate transfer within the same bank
-            new_transfer = Transfer(
-                from_account_id=from_account.id,
-                to_account_id=to_account.id,
-                title=form.title.data,
-                amount=form.amount.data,
-                status='completed'
-            )
-            from_account.balance -= form.amount.data
-            to_account.balance += form.amount.data
-            db.session.add(new_transfer)
-            
-            db.session.commit()
-            flash('Transfer completed successfully', 'success')
+        try:
+            with db.session.begin_nested():
+                if from_account.bank_id == to_account.bank_id:
+                    new_transfer = Transfer(
+                        from_account_id=from_account.id,
+                        to_account_id=to_account.id,
+                        title=form.title.data,
+                        amount=form.amount.data,
+                        status='completed'
+                    )
+                    from_account.balance -= form.amount.data
+                    to_account.balance += form.amount.data
+                    db.session.add(new_transfer)
 
-        else:
-            # Schedule transfer between different banks
-            new_transfer = Transfer(
-                from_account_id=from_account.id,
-                to_account_id=to_account.id,
-                title=form.title.data,
-                amount=form.amount.data,
-                status='waiting'
-            )
-            from_account.balance -= form.amount.data
-            db.session.add(new_transfer)
+                else:
+                    new_transfer = Transfer(
+                        from_account_id=from_account.id,
+                        to_account_id=to_account.id,
+                        title=form.title.data,
+                        amount=form.amount.data,
+                        status='waiting'
+                    )
+                    db.session.add(new_transfer)
 
-            db.session.commit()
-            flash('The transfer is pending approval', 'info')
+                db.session.commit() 
 
-        return redirect(url_for('account.show_user_accounts'))
+            if from_account.bank_id == to_account.bank_id:
+                flash('Transfer completed successfully', 'success')
+            else:
+                flash('The transfer is pending approval', 'info')
+
+            return redirect(url_for('account.show_user_accounts'))
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            flash(f'Transfer failed: {str(e)}', 'error')
+            return render_template('transfer.html', form=form)
 
     return render_template('transfer.html', form=form)
 
